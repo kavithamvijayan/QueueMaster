@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/helpPageConfig">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/emailQueue1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="1) Enter the new email"/>
+
+            <ImageView
+                android:id="@+id/emailQueueView1"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/email1_edit" />
+
+            <TextView
+                android:id="@+id/emailQueue2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="2) Enter both new password and old one."/>
+
+            <ImageView
+                android:id="@+id/emailQueueView2"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/email2_edit" />
+
+            <TextView
+                android:id="@+id/emailQueue3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="3) Tap 'Save' to save the setting or 'Cancel' to go exit the page."/>
+
+            <ImageView
+                android:id="@+id/emailQueueView3"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/email3_edit" />
+
+            <TextView
+                android:id="@+id/emailQueue4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:text="4) Done!!"/>
+
+            <ImageView
+                android:id="@+id/emailQueueView4"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/done" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "102447137729",
+    "firebase_url": "https://queuemaster-8c13d.firebaseio.com",
+    "project_id": "queuemaster-8c13d",
+    "storage_bucket": "queuemaster-8c13d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102447137729:android:56ee92562ab45259fa6540",
+        "android_client_info": {
+          "package_name": "com.universe.queuemaster"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102447137729-emh35qikbimr2ltp19unjqhshs1hgk54.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEP1ZViQ6o6ZvinWHlQ2Uv8-PVy1o310k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102447137729-emh35qikbimr2ltp19unjqhshs1hgk54.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,359 @@
+package com.universe.queuemaster.customer;
+
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.universe.queuemaster.R;
+import com.universe.queuemaster.database.UserInformation;
+import com.universe.queuemaster.login.SegregationActivityAfterLogin;
+import com.universe.queuemaster.login.FirebaseLoginActivity;
+import com.universe.queuemaster.misc.CircleTransform;
+import com.universe.queuemaster.misc.Utils;
+
+import static android.app.Activity.RESULT_OK;
+
+public class CustSettings extends Fragment {
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private StorageReference mStorageRef;
+    private StorageTask mUploadTask;
+    private DatabaseReference databaseReference;
+
+    private Button editAccountButton;
+    private Button switchModeButton;
+    private Button saveButton;
+    private Button cancelButton;
+    private Button signOutButton;
+    private TextView oldEmail;
+    private EditText newEmail;
+
+    private TextView displayPassword;
+    private EditText oldPassword;
+    private EditText newPassword;
+
+    private TextView oldName;
+    private EditText newName;
+
+    private ImageView oldProfilePic;
+    private ImageButton newProfilePic;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri mImageUri;
+    private String imageURL;
+    private final String TAG = "CustSettings";
+
+    public CustSettings() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mStorageRef = FirebaseStorage.getInstance().getReference("Customers");
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users");
+
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.cust_settings, container, false);
+        saveButton = v.findViewById(R.id.cust_profile_SaveButton);
+        editAccountButton = v.findViewById(R.id.cust_profile_editAccountButton);
+        cancelButton = v.findViewById(R.id.cust_profile_CancelButton);
+        switchModeButton = v.findViewById(R.id.cust_profile_switchModeButton);
+        displayPassword = v.findViewById(R.id.cust_profile_password_textview);
+        oldPassword = v.findViewById(R.id.cust_profile_password_userOld);
+        newPassword = v.findViewById(R.id.cust_profile_password_userNew);
+        oldEmail = v.findViewById(R.id.cust_profile_email_textView);
+        newEmail = v.findViewById(R.id.cust_profile_email_editText);
+        oldName = v.findViewById(R.id.cust_profile_nameOld);
+        newName = v.findViewById(R.id.cust_profile_nameNew);
+        oldProfilePic = v.findViewById(R.id.cust_profile_image_old);
+        newProfilePic = v.findViewById(R.id.cust_profile_image_new);
+        signOutButton =  v.findViewById(R.id.cust_profile_logout);
+        retrieveDetails();
+
+        // Setting widgets to be invisible at first, until edit account button is clicked
+        newPassword.setVisibility(View.GONE);
+        oldPassword.setVisibility(View.GONE);
+        newEmail.setVisibility(View.GONE);
+        saveButton.setVisibility(View.GONE);
+        newName.setVisibility(View.GONE);
+        newProfilePic.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
+
+        editAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // UI Aspects of clicking editAccount Button
+                changeVisibility();
+            }
+        });
+
+        newProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(newPassword.getText()) || TextUtils.isEmpty(oldPassword.getText()) ||
+                        TextUtils.isEmpty(newName.getText()) || TextUtils.isEmpty(newEmail.getText())) {
+                    Toast.makeText(getContext(), "All fields are necessary!", Toast.LENGTH_SHORT).show();
+                } else {
+                    verifyUserDetails();
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeVisibility();
+            }
+        });
+
+
+        switchModeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), SegregationActivityAfterLogin.class));
+            }
+        });
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    firebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(getContext(), FirebaseLoginActivity.class));
+
+
+            }
+        });
+
+        return v;
+    }
+
+    // Functions for retrieving, checking and uploading account details.
+    void retrieveDetails() {
+        if (user.getEmail() != null) {
+            oldEmail.setText(user.getEmail());
+            newEmail.setText(user.getEmail());
+        }
+        if (user.getDisplayName() != null) {
+            oldName.setText(user.getDisplayName());
+            newName.setText(user.getDisplayName());
+        }
+
+        if (user.getPhotoUrl() != null) {
+            mImageUri = user.getPhotoUrl();
+            Picasso.get().load(mImageUri).transform(new CircleTransform()).into(newProfilePic);
+            Picasso.get().load(mImageUri).transform(new CircleTransform()).into(oldProfilePic);
+        }
+    }
+
+    void verifyUserDetails() {
+        user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(),
+                oldPassword.getText().toString())).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User re-authenticated.");
+                    if (newPassword.getText().toString() != oldPassword.getText().toString()) {
+                        updateDetails();
+                    } else {
+                        Toast.makeText(getContext(),"New password is the same as old password?", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Old Password entered wrongly.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    void updateDetails() {
+        user.updateEmail(newEmail.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User email address updated.");
+                        }
+                    }
+                });
+
+        user.updatePassword(newPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "User password updated.");
+                }
+            }
+        });
+
+        if (mImageUri != null && mImageUri!= user.getPhotoUrl()) {
+            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+                    + "." + Utils.getFileExtension(mImageUri, getContext()));
+
+            mUploadTask = fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d(TAG, "Upload Customer Profile Image successful");
+
+                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!urlTask.isSuccessful()) ;
+                            Uri imageUri = urlTask.getResult();
+                            imageURL = String.valueOf(imageUri);
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(newName.getText().toString())
+                                    .setPhotoUri(Uri.parse(imageURL))
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User profile updated.");
+                                            }
+                                        }
+                                    });
+
+                            Toast.makeText(getContext(), "Account settings saved.", Toast.LENGTH_SHORT).show();
+                            UserInformation userInformation = new UserInformation(newName.getText().toString(), imageURL, Init_Cust_Profile.priority);
+                            databaseReference.child(user.getUid()).setValue(userInformation);
+                            Picasso.get().load(mImageUri).transform(new CircleTransform()).into(oldProfilePic);
+                            oldEmail.setText(newEmail.getText());
+                            oldName.setText(newName.getText());
+                            Picasso.get().load(mImageUri).transform(new CircleTransform()).into(newProfilePic);
+                            changeVisibility();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d(TAG, "Image Upload in progress");
+                        }
+                    });
+        }
+
+    }
+
+    // Function to make UI changes according to new account details
+
+    void changeVisibility() {
+        if (oldPassword.getVisibility() == View.GONE) oldPassword.setVisibility(View.VISIBLE);
+        else if (oldPassword.getVisibility() == View.VISIBLE) oldPassword.setVisibility(View.GONE);
+
+        if (newPassword.getVisibility() == View.GONE) newPassword.setVisibility(View.VISIBLE);
+        else if (newPassword.getVisibility() == View.VISIBLE) newPassword.setVisibility(View.GONE);
+
+        if (newEmail.getVisibility() == View.GONE) newEmail.setVisibility(View.VISIBLE);
+        else if (newEmail.getVisibility() == View.VISIBLE) newEmail.setVisibility(View.GONE);
+
+        if (oldEmail.getVisibility() == View.GONE) {
+            oldEmail.setVisibility(View.VISIBLE);
+        }
+        else if (oldEmail.getVisibility() == View.VISIBLE) oldEmail.setVisibility(View.GONE);
+
+        if (displayPassword.getVisibility() == View.GONE)
+            displayPassword.setVisibility(View.VISIBLE);
+        else if (displayPassword.getVisibility() == View.VISIBLE)
+            displayPassword.setVisibility(View.GONE);
+
+        if (switchModeButton.getVisibility() == View.GONE) switchModeButton.setVisibility(View.VISIBLE);
+        else if (switchModeButton.getVisibility() == View.VISIBLE)
+            switchModeButton.setVisibility(View.GONE);
+
+        if (editAccountButton.getVisibility() == View.VISIBLE) {
+            saveButton.setVisibility(View.VISIBLE);
+            editAccountButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.VISIBLE);
+        }
+        else if (saveButton.getVisibility() == View.VISIBLE) {
+            saveButton.setVisibility(View.GONE);
+            editAccountButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.GONE);
+        }
+
+
+        if (newName.getVisibility() == View.GONE && oldName.getVisibility() == View.VISIBLE) {
+            newName.setVisibility(View.VISIBLE);
+            oldName.setVisibility(View.GONE);
+        } else {
+            oldName.setVisibility(View.VISIBLE);
+            newName.setVisibility(View.GONE);
+        }
+
+        if (newProfilePic.getVisibility() == View.GONE && oldProfilePic.getVisibility() == View.VISIBLE) {
+            newProfilePic.setVisibility(View.VISIBLE);
+            oldProfilePic.setVisibility(View.GONE);
+        } else {
+            oldProfilePic.setVisibility(View.VISIBLE);
+            newProfilePic.setVisibility(View.GONE);
+        }
+    }
+
+    // function for uploading image
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            mImageUri = data.getData();
+            Picasso.get().load(mImageUri).transform(new CircleTransform()).into(newProfilePic);
+        }
+    }
+}

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".customer.Cust_Search_Merchant"
+    android:padding="12dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <LinearLayout
+            android:id="@+id/cme_LY01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center|center_horizontal"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:weightSum="10"
+            tools:ignore="MissingConstraints">
+
+            <!--SearchView
+            android:id="@+id/cme_editTxt_SearchBar"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/seach_layout"
+            android:queryHint="Queue ID / Name"
+            android:searchHintIcon="@null"
+            android:iconifiedByDefault="false"
+            android:searchIcon="@null"
+             /-->
+            <EditText
+                android:id="@+id/testcme_editTxt_SearchBar"
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:layout_weight="7"
+                android:background="@drawable/seach_layout"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="Queue Name"
+                android:inputType="textPersonName"
+                android:padding="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="#adadad"
+                android:windowSoftInputMode="adjustNothing">
+
+            </EditText>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="42dp"
+                android:layout_alignTop="@+id/cme_editTxt_SearchBar"
+                android:layout_margin="5dp"
+                android:layout_toStartOf="@+id/cme_editTxt_SearchBar"
+                android:adjustViewBounds="false"
+                android:padding="5dp"
+                app:srcCompat="@drawable/search_icon2" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/cme_LY02"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/testSearchText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingBottom="5dp"
+            android:text="Result"
+            android:textColor="@color/colorPrimaryDark"
+            style="@style/recyclerJoinQ"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/testmerchant_search_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

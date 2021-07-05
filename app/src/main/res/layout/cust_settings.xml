@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    tools:context=".customer.CustSettings">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/cust_profile_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="top"
+        android:layout_margin="12dp">
+
+        <ImageView
+            android:id="@+id/cust_profile_image_old"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            style="@style/Widget.Design.FloatingActionButton"
+            android:scaleType="centerCrop"
+            android:src="@drawable/search_icon"
+            android:layout_marginBottom="12dp"/>
+
+        <ImageButton
+            android:id="@+id/cust_profile_image_new"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            style="@style/Widget.Design.FloatingActionButton"
+            android:scaleType="centerCrop"
+            android:src="@drawable/search_icon"
+            android:layout_marginBottom="12dp"/>
+        <TextView
+            android:id="@+id/cust_profile_nameOld"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Name"
+            android:fontFamily="@font/quicksand_bold"
+            android:layout_gravity="center"
+            android:textColor="@color/colorSecondaryDark" />
+        <EditText
+            android:id="@+id/cust_profile_nameNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ellipsize="start"
+            android:gravity="center"
+            style="@style/profile_detail_toEdit"/>
+
+        <LinearLayout
+            android:id="@+id/cust_profile_id_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cust_profile_general_settings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="24dp"
+        style="@style/profile_category_layout">
+        <TextView
+            android:id="@+id/cust_profile_email_header"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Email"
+            style="@style/profile_detail_header"/>
+        <TextView
+            android:id="@+id/cust_profile_email_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Default Email"
+            android:layout_marginBottom="12dp"
+            style="@style/profile_detail_forDisplay" />
+        <EditText
+            android:id="@+id/cust_profile_email_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Default Email"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"
+            android:inputType="textEmailAddress"
+            style="@style/profile_detail_toEdit" />
+        <TextView
+            android:id="@+id/cust_profile_password_header"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Password"
+            style="@style/profile_detail_header" />
+        <TextView
+            android:id="@+id/cust_profile_password_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*******"
+            android:layout_marginBottom="12dp"
+            style="@style/profile_detail_forDisplay"/>
+        <EditText
+            android:id="@+id/cust_profile_password_userOld"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:inputType="textPassword"
+            android:hint="Old Password"
+            android:layout_marginBottom="6dp"
+            style="@style/profile_detail_toEdit"/>
+        <EditText
+            android:id="@+id/cust_profile_password_userNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="New Password"
+            android:ellipsize="start"
+            android:gravity="center"
+            android:inputType="textPassword"
+            style="@style/profile_detail_toEdit"
+            android:layout_marginBottom="12dp"/>
+
+        <Button
+            android:id="@+id/cust_profile_editAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Account"
+            style="@style/recyclerJoinQ"
+            android:background="@drawable/primary_float_button"/>
+        <Button
+            android:id="@+id/cust_profile_SaveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_marginBottom="12dp"
+            style="@style/recyclerJoinQ"
+            android:background="@drawable/primary_float_button"/>
+        <Button
+            android:id="@+id/cust_profile_CancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+    </LinearLayout>
+</LinearLayout>
+
+
+<Button
+android:id="@+id/cust_profile_switchModeButton"
+android:text="Switch Mode"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+style="@style/profile_detail_forDisplay"
+android:padding="16dp" />
+    <Button
+        android:id="@+id/cust_profile_logout"
+        android:text="Sign out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/profile_detail_forDisplay"
+        android:padding="16dp" />
+
+    </LinearLayout>
